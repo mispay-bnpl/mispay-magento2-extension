@@ -5,7 +5,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Finbyte\MISPayMethod\Model\UI;
+namespace MISPay\MISPayMethod\Model\UI;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\SamplePaymentGateway\Gateway\Http\Client\ClientMock;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Finbyte\MISPayMethod\Helper;
+namespace MISPay\MISPayMethod\Helper;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Class MISPayRequestHelper
  *
- * @package Finbyte\MISPayMethod\Helper
+ * @package MISPay\MISPayMethod\Helper
  */
 class MISPayRequestHelper
 {

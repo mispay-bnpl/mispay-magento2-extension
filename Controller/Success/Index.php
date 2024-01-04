@@ -1,6 +1,6 @@
 <?php
 
-namespace Finbyte\MISPayMethod\Controller\Success;
+namespace MISPay\MISPayMethod\Controller\Success;
 
 use Exception;
 use Magento\Checkout\Model\Session as CheckoutSession;
@@ -15,7 +15,7 @@ use Magento\Framework\Controller\Result\RedirectFactory;
 /**
  * Class Index
  *
- * @package Finbyte\MISPayMethod\Controller\Success
+ * @package MISPay\MISPayMethod\Controller\Success
  */
 class Index implements \Magento\Framework\App\Action\HttpGetActionInterface
 {

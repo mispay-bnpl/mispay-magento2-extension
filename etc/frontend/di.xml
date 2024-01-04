@@ -3,11 +3,11 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="mispay_config_provider" xsi:type="object">Finbyte\MISPayMethod\Model\UI\ConfigProvider</item>
+                <item name="mispay_config_provider" xsi:type="object">MISPay\MISPayMethod\Model\UI\ConfigProvider</item>
             </argument>
         </arguments>
     </type>
-    <type name="Finbyte\MISPayMethod\Block\Info">
+    <type name="MISPay\MISPayMethod\Block\Info">
         <arguments>
             <argument name="data" xsi:type="array">
                 <item xsi:type="string" name="is_secure_mode">1</item>

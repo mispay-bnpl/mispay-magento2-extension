@@ -1,6 +1,6 @@
 <?php
 
-namespace Finbyte\MISPayMethod\Helper;
+namespace MISPay\MISPayMethod\Helper;
 
 use Psr\Log\LoggerInterface;
 

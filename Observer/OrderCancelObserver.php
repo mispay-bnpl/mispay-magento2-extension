@@ -1,9 +1,9 @@
 <?php
 
-namespace Finbyte\MISPayMethod\Observer;
+namespace MISPay\MISPayMethod\Observer;
 
-use Finbyte\MISPayMethod\Helper\MISPayHelper;
-use Finbyte\MISPayMethod\Helper\MISPayLogger;
+use MISPay\MISPayMethod\Helper\MISPayHelper;
+use MISPay\MISPayMethod\Helper\MISPayLogger;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Event\ObserverInterface;

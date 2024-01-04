@@ -3,7 +3,7 @@
     <body>
         <referenceBlock name="order_payment">
             <action method="setTemplate">
-                <argument name="template" xsi:type="string">Finbyte_MISPayMethod::order/view/payment/info.phtml</argument>
+                <argument name="template" xsi:type="string">MISPay_MISPayMethod::order/view/payment/info.phtml</argument>
             </action>
         </referenceBlock>
     </body>

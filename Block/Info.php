@@ -5,7 +5,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Finbyte\MISPayMethod\Block;
+namespace MISPay\MISPayMethod\Block;
 
 use Magento\Framework\Phrase;
 use Magento\Payment\Block\ConfigurableInfo;

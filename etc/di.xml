@@ -2,17 +2,17 @@
     <!-- Payment Method Facade configuration -->
     <virtualType name="MISPayMethodFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
-            <argument name="code" xsi:type="const">Finbyte\MISPayMethod\Model\UI\ConfigProvider::CODE</argument>
+            <argument name="code" xsi:type="const">MISPay\MISPayMethod\Model\UI\ConfigProvider::CODE</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="valueHandlerPool" xsi:type="object">MISPayMethodValueHandlerPool</argument>
-            <argument name="infoBlockType" xsi:type="string">Finbyte\MISPayMethod\Block\Info</argument>
+            <argument name="infoBlockType" xsi:type="string">MISPay\MISPayMethod\Block\Info</argument>
         </arguments>
     </virtualType>
 
         <!-- Configuration reader -->
     <virtualType name="MISPayMethodConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Finbyte\MISPayMethod\Model\UI\ConfigProvider::CODE</argument>
+            <argument name="methodCode" xsi:type="const">MISPay\MISPayMethod\Model\UI\ConfigProvider::CODE</argument>
         </arguments>
     </virtualType>
 

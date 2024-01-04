@@ -1,6 +1,6 @@
 <?php
 
-namespace Finbyte\MISPayMethod\Helper;
+namespace MISPay\MISPayMethod\Helper;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ObjectManager;
@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Class MISPayHelper
  *
- * @package Finbyte\MISPayMagento2Payment\Helper
+ * @package MISPay\MISPayMethod\Helper
  */
 class MISPayHelper
 {
@@ -117,9 +117,7 @@ class MISPayHelper
     public function getBaseUrl()
     {
         if ($this->getTestMode() == 1) {
-            // return "https://api.mispay.co/sandbox/v1/api";
-            // return "https://mispay-merchant-app-dev.finbyte.cloud/api";
-            return "https://mispay-merchant-app-test.finbyte.cloud/api";
+            return "https://api.mispay.co/sandbox/v1/api";
         }
         return "https://api.mispay.co/v1/api";
     }

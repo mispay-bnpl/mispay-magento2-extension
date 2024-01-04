@@ -1,6 +1,6 @@
 <?php
 
-namespace Finbyte\MISPayMethod\Block\Adminhtml\System\Config\Fieldset;
+namespace MISPay\MISPayMethod\Block\Adminhtml\System\Config\Fieldset;
 
 use Magento\Backend\Block\Context;
 use Magento\Backend\Model\Auth\Session;
@@ -12,7 +12,7 @@ use Magento\Framework\View\Helper\Js;
 /**
  * Class Payment
  *
- * @package Finbyte\MISPayMagento2Payment\Block\Adminhtml\System\Config\Fieldset
+ * @package MISPay\MISPayMethod\Block\Adminhtml\System\Config\Fieldset
  */
 class Payment extends Fieldset {
 

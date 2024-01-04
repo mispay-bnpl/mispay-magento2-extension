@@ -1,6 +1,6 @@
 <?php
 
-namespace Finbyte\MISPayMethod\Observer;
+namespace MISPay\MISPayMethod\Observer;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Response\Http;
@@ -9,14 +9,14 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Message\ManagerInterface;
 use Psr\Log\LoggerInterface;
-use Finbyte\MISPayMethod\Helper\MISPayHelper;
-use Finbyte\MISPayMethod\Helper\MISPayRequestHelper;
+use MISPay\MISPayMethod\Helper\MISPayHelper;
+use MISPay\MISPayMethod\Helper\MISPayRequestHelper;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
  * Class ControllerActionPredispatch
  *
- * @package Finbyte\MISPayMethod\Observer
+ * @package MISPay\MISPayMethod\Observer
  */
 class ControllerActionPredispatch implements ObserverInterface
 {

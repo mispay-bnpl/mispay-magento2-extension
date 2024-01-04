@@ -46,10 +46,10 @@ rm -rf src/generated/metadata/* src/generated/code/*
 bin/magento deploy:mode:set developer
 ```
 
-Finally clone this repo to `src/app/code/Finbyte/MISPayMethod` folder.
+Finally clone this repo to `src/app/code/MISPay/MISPayMethod` folder.
 
 ```sh
-git clone git@gitlab.core.finbyte.cloud:jouri/sdks/magento-extension.git ./src/app/code/MISPay/MISPayMagento2Payment
+git clone https://github.com/mispay-bnpl/mispay-magento2-extension ./src/app/code/MISPay/MISPayMagento2Payment
 ```
 
 And upgrade magento setup.
@@ -58,10 +58,10 @@ And upgrade magento setup.
 bin/magento setup:upgrade
 ```
 
-to enable it `Finbyte_MISPayMethod`;
+to enable it `MISPay_MISPayMethod`;
 
 ```sh
-bin/magento module:enable Finbyte_MISPayMethod
+bin/magento module:enable MISPay_MISPayMethod
 ```
 
 ### Docker Magento File system
@@ -74,4 +74,12 @@ bin/copyfromcontainer vendor
 # or
 
 bin/copytocontainer pub
+```
+
+## Example Callback URL with payload
+
+```
+# SUCCESS
+https://mispay.magento.dev/mispay/callback?_=QjlRLzVXdXRPb1BneFdrakhqNTViWlpmcndaT3JGeS94OXRTUWo2S051NDJxeTNscjBwMzJJMnJnODdMbE9VWDFidCt3aDcxcHJjUS8yVUZzOGR0VmRTQzVlaXhUNW9zeVRxYjZMSDFBYnFzTkdqSlljaXBhNUp6elZTNlBnbnZhSmhaV1NzVVRVVnkvUG15TkZpMDNqV1c=&appId=a39b5d75577d8837543b20a95c3a2c8ced0bcb61
+
 ```

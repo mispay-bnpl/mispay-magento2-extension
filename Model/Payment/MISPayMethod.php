@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Finbyte\MISPayMethod\Model\Payment;
+namespace MISPay\MISPayMethod\Model\Payment;
 
 use Magento\Payment\Model\Method\AbstractMethod;
 

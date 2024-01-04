@@ -1,6 +1,6 @@
 <?php
 
-namespace Finbyte\MISPayMethod\Controller\Callback;
+namespace MISPay\MISPayMethod\Controller\Callback;
 
 use Exception;
 use Magento\Checkout\Model\Session as CheckoutSession;
@@ -13,15 +13,15 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use \Magento\Framework\App\Request\Http;
 use Psr\Log\LoggerInterface;
-use Finbyte\MISPayMethod\Helper\MISPayHelper;
-use Finbyte\MISPayMethod\Helper\MISPayRequestHelper;
+use MISPay\MISPayMethod\Helper\MISPayHelper;
+use MISPay\MISPayMethod\Helper\MISPayRequestHelper;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 
 /**
  * Class Index
  *
- * @package Finbyte\MISPayMethod\Controller\Callback
+ * @package MISPay\MISPayMethod\Controller\Callback
  */
 class Index implements \Magento\Framework\App\Action\HttpGetActionInterface
 {

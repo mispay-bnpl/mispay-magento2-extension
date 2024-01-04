@@ -1,5 +1,5 @@
 {
-    "name": "finbyte/mispay-magento2-payment-method",
+    "name": "mispay/mispay-magento2-payment-method",
     "description": "MIS Pay Magento2 Payment Module",
     "type": "magento2-module",
     "version": "1.0.0",
@@ -16,7 +16,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "Finbyte\\Payment\\": ""
+            "MISPay\\MISPayMethod\\": ""
         }
     },
     "require": {
@@ -24,7 +24,6 @@
     },
     "keywords": [
         "API",
-        "finbyte",
         "Credit card",
         "eCommerce",
         "Magento",

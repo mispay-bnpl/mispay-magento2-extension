@@ -1,0 +1,12 @@
+"CODE_MP00","Success"
+"CODE_MP01","Timeout"
+"CODE_MP02","Cancelled"
+
+"CODE_ME01","App ID is not provided"
+"CODE_ME02","App Secret is not provided"
+"CODE_ME03","Merchant Application could not be found (either App ID or App Secret is wrong)."
+"CODE_ME04","Checkout Session is invalid."
+"CODE_ME05","Transaction not found."
+"CODE_ME10","Token is not valid."
+"CODE_ME11","Session Expired."
+"CODE_ME97","Invalid Request."

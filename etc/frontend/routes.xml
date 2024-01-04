@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route id="mispay_route" frontName="mispay">
+            <module name="Finbyte_MISPayMethod" />
+        </route>
+    </router>
+</config>

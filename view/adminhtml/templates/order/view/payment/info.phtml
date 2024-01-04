@@ -1,0 +1,6 @@
+<?php
+
+/** @var $block \Magento\Payment\Block\Info */ ?>
+<div class="order-payment-additional">
+    <?php echo $block->getOrder()->getPayment()->getAdditionalData(); ?>
+</div>

@@ -2,6 +2,13 @@
 
 This PHP module is for extending the payment methods of a Magento application to make it able to receive payment via MIS Pay.
 
+## Installation
+
+```sh
+composer require mispay/mispay-magento2-payment-method
+bin/magento setup:upgrade
+```
+
 ## Development Environment
 
 [Docker Magento](https://) can be used for local development environment.

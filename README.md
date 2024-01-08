@@ -9,84 +9,34 @@ composer require mispay/mispay-magento2-payment-method
 bin/magento setup:upgrade
 ```
 
-## Development Environment
-
-[Docker Magento](https://) can be used for local development environment.
-
-**Docker Magento installation**
-
-```sh
-# Create your project directory then go into it:
-mkdir -p ~/Sites/magento
-cd $_
-
-# the domain for local dev: mispay.magento.dev
-# Run this automated one-liner from the directory you want to install your project.
-curl -s https://raw.githubusercontent.com/markshust/docker-magento/master/lib/onelinesetup | bash -s -- mispay.magento.dev 2.4.6-p3 community
-```
-
-Edit `src/env/magento.env` file for desired credentials, then run;
-
-```sh
-# the domain for local dev: mispay.magento.dev
-bin/setup-install mispay.magento.dev
-```
-
-import sample data;
-
-```sh
-bin/magento sampledata:deploy
-bin/magento setup:upgrade
-```
-
-disabling 2FA login
-
-```sh
-bin/magento module:disable Magento_AdminAdobeImsTwoFactorAuth
-bin/magento module:disable Magento_TwoFactorAuth
-```
-
-enable `developer` mode
-
-```sh
-rm -rf src/generated/metadata/* src/generated/code/*
-bin/magento deploy:mode:set developer
-```
-
-Finally clone this repo to `src/app/code/MISPay/MISPayMethod` folder.
-
-```sh
-git clone https://github.com/mispay-bnpl/mispay-magento2-extension ./src/app/code/MISPay/MISPayMagento2Payment
-```
-
-And upgrade magento setup.
-
-```sh
-bin/magento setup:upgrade
-```
-
 to enable it `MISPay_MISPayMethod`;
 
 ```sh
 bin/magento module:enable MISPay_MISPayMethod
 ```
 
-### Docker Magento File system
+## Configuration
 
-Some folders are not bi-directionally synced with the containers. If you want to copy files between host and container these commands can be used.
+After the installation process:
 
-```sh
-bin/copyfromcontainer vendor
+- Navigate to **Stores > Configuration** page from the Magento admin panel.
+- After making sure that the correct scope has been selected, select **Sales > Payment Methods** from the left panel.
+- MISPay method can be enabled from this panel.
 
-# or
+### Options
 
-bin/copytocontainer pub
-```
+- **Enabled**: it enables the plugin itself. If this is Yes payment method will be visible on the store front side.
+- **Payment Area Title**: You can configure the area title via this option.
+- **Merchant App ID**: The x-app-id value shared by the MISPay team.
+- **Merchant App Secret**: The x-app-secret value shared by the MISPay team.
+- **Test Mode**: Indicates whether the integration uses the Sandbox or the Production environment. For testing purposes, the Sandbox environment should be used.
+- **Show MISPay Logo**: The MISPay logo will appear if this option is selected.
+- **New Order Status**: The status of the new orders.
 
-## Example Callback URL with payload
+That's it! now the customers can use the MISPay option during the checkout process.
 
-```
-# SUCCESS
-https://mispay.magento.dev/mispay/callback?_=QjlRLzVXdXRPb1BneFdrakhqNTViWlpmcndaT3JGeS94OXRTUWo2S051NDJxeTNscjBwMzJJMnJnODdMbE9VWDFidCt3aDcxcHJjUS8yVUZzOGR0VmRTQzVlaXhUNW9zeVRxYjZMSDFBYnFzTkdqSlljaXBhNUp6elZTNlBnbnZhSmhaV1NzVVRVVnkvUG15TkZpMDNqV1c=&appId=a39b5d75577d8837543b20a95c3a2c8ced0bcb61
+---
 
-```
+MISPay ©
+All rights reserved ®
+https://www.mispay.co

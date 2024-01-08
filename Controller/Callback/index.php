@@ -139,7 +139,7 @@ class Index implements \Magento\Framework\App\Action\HttpGetActionInterface
             $order->getState() == Order::STATE_NEW ||
             $order->getState() == null
         ) {
-            $order->setState(Order::STATE_PENDING_PAYMENT);
+            $order->setState($this->mispayHelper->getOrderStatus())->setStatus($this->mispayHelper->getOrderStatus());
             $this->orderRepository->save($order);
         }
 

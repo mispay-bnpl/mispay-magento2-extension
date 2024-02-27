@@ -7,8 +7,10 @@
                 <model>MISPayMethodFacade</model>
                 <title>Credit Card</title>
                 <order_status>processing</order_status>
-                <merchant_app_id> </merchant_app_id>
-                <merchant_app_secret> </merchant_app_secret>
+                <merchant_app_id></merchant_app_id>
+                <merchant_app_secret></merchant_app_secret>
+                <is_widget_enabled></is_widget_enabled>
+                <widget_access_key></widget_access_key>
                 <debug_on>1</debug_on>
                 <test_mode>1</test_mode>
                 <mispay_logo>1</mispay_logo>

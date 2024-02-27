@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Copyright © MISPay, Inc. All rights reserved.
+ */
+
+$_accessKey = $block->getAccessKey();
+$_enabled = $block->isWidgetEnabled();
+?>
+<?php if ($_enabled) : ?>
+    <script defer src="https://widget.mispay.co/v1/sdk.js?authorize=<?php echo $_accessKey ?>"></script>
+<?php endif; ?>

@@ -152,6 +152,22 @@ class MISPayHelper
     }
 
     /**
+     * @return bool
+     */
+    public function isWidgetEnabled()
+    {
+        return $this->config->getValue('payment/mispaymethod/is_widget_enabled', $this->getScopeInterface());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWidgetAccessKey()
+    {
+        return $this->config->getValue('payment/mispaymethod/widget_access_key', $this->getScopeInterface());
+    }
+
+    /**
      * @return mixed
      */
     public function getTimeoutLimit()

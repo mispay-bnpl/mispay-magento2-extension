@@ -8,7 +8,6 @@
 namespace MISPay\MISPayMethod\Model\UI;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Magento\SamplePaymentGateway\Gateway\Http\Client\ClientMock;
 use Magento\Framework\App\ObjectManager;
 
 /**

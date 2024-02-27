@@ -27,4 +27,9 @@ class HeadJs extends Template
     {
         return $this->mispayHelper->getWidgetAccessKey();
     }
+
+    public function getTestMode()
+    {
+        return $this->mispayHelper->getTestMode();
+    }
 }

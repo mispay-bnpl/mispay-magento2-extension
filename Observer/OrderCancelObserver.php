@@ -42,7 +42,6 @@ class OrderCancelObserver implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();
-        $this->logger->setTrackId($this->mispayHelper->getTrackIdFromOrder($order));
         $this->logger->debug('Cancel flow started for the order with id: ' . $order->getId());
         $this->logger->debug('Additional information for the order\'s payment: ' . print_r(json_encode($order->getPayment()->getAdditionalInformation()), true));
 

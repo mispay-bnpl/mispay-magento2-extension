@@ -213,6 +213,14 @@ class MISPayHelper
     }
 
     /**
+     * @return mixed
+     */
+    public function getIncerementOrderId()
+    {
+        return $this->checkoutSession->getLastRealOrder()->getIncrementId();
+    }
+
+    /**
      * @return Order|OrderFactory
      */
     public function getOrder()
@@ -358,6 +366,14 @@ class MISPayHelper
      */
     public function getTrackIdFromOrder(\Magento\Sales\Model\Order $order)
     {
-        return json_decode(json_encode($order->getPayment()->getAdditionalInformation()))->mispay_checkout_track_id;
+        $additionalData = $order->getPayment()->getAdditionalInformation();
+        if (empty($additionalData)) {
+            return "";
+        }
+        $parsed = json_decode(json_encode($additionalData));
+        if (empty($parsed->mispay_checkout_track_id)) {
+            return "";
+        }
+        return $parsed->mispay_checkout_track_id;
     }
 }

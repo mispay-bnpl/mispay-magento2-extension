@@ -2,7 +2,6 @@
 
 namespace MISPay\MISPayMethod\Observer;
 
-use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -20,11 +19,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
  */
 class ControllerActionPredispatch implements ObserverInterface
 {
-    /**
-     * @var Session
-     */
-    protected $checkoutSession;
-
     /**
      * @var Http
      */
@@ -63,7 +57,6 @@ class ControllerActionPredispatch implements ObserverInterface
     /**
      * ControllerActionPredispatch constructor.
      *
-     * @param Session                        $checkoutSession
      * @param Http                           $redirect
      * @param LoggerInterface                $logger
      * @param ManagerInterface               $messageManager
@@ -72,7 +65,6 @@ class ControllerActionPredispatch implements ObserverInterface
      * @param MISPayRequestHelper            $mispayRequestHelper
      */
     public function __construct(
-        Session $checkoutSession,
         Http $redirect,
         LoggerInterface $logger,
         ManagerInterface $messageManager,
@@ -81,7 +73,6 @@ class ControllerActionPredispatch implements ObserverInterface
         MISPayRequestHelper $mispayRequestHelper
 
     ) {
-        $this->checkoutSession = $checkoutSession;
         $this->request = $redirect;
         $this->logger = $logger;
         $this->messageManager = $messageManager;
@@ -100,7 +91,9 @@ class ControllerActionPredispatch implements ObserverInterface
             return;
         }
 
-        $orderId = $this->checkoutSession->getLastOrderId();
+        $orderId = $this->mispayHelper->getRealOrderId();
+        $incerementOrderId = $this->mispayHelper->getIncerementOrderId();
+
         if (!$orderId) {
             return;
         }
@@ -133,6 +126,7 @@ class ControllerActionPredispatch implements ObserverInterface
                 'mispay_checkout_url' => $url,
                 'mispay_checkout_track_id' => $startCheckoutResult->trackId,
                 'order_no' => $orderId,
+                'order_increment_id' => $incerementOrderId,
             );
             $payment = $order->getPayment();
             $payment->setAdditionalData(json_encode($details));

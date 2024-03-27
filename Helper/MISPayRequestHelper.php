@@ -150,7 +150,7 @@ class MISPayRequestHelper
             ),
             CURLOPT_POSTFIELDS => '{
                 "version": "v1.1",
-                "orderId": "' . $this->mispayHelper->getRealOrderId() . '",
+                "orderId": "' . $this->mispayHelper->getIncerementOrderId() . '",
                 "purchaseAmount": ' . $this->mispayHelper->getPaymentAmount() . ',
                 "purchaseCurrency": "SAR",
                 "lang": "' . $lang . '"

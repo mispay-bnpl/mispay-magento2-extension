@@ -6,12 +6,20 @@ use Psr\Log\LoggerInterface;
 
 class MISPayLogger
 {
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
-    protected string $trackId;
+
+    /**
+     * @var string
+     */
+    protected $trackId;
 
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
+        $this->trackId = 'NONE';
     }
 
     protected function getPrefix()

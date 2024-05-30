@@ -13,12 +13,35 @@ use Psr\Log\LoggerInterface;
 
 class OrderCancelObserver implements ObserverInterface
 {
-    protected MISPayLogger $logger;
-    protected MISPayHelper $mispayHelper;
-    protected SearchCriteriaBuilder $searchCriteriaBuilder;
-    protected OrderRepositoryInterface $orderRepository;
-    protected TransactionRepository $transactionRepository;
-    protected FilterBuilder $filterBuilder;
+    /**
+     * @var MISPayLogger
+     */
+    protected $logger;
+    
+    /**
+     * @var MISPayHelper
+     */
+    protected $mispayHelper;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
+    protected $orderRepository;
+
+    /**
+     * @var TransactionRepository
+     */
+    protected $transactionRepository;
+
+    /**
+     * @var FilterBuilder
+     */
+    protected $filterBuilder;
 
 
     public function __construct(
@@ -42,6 +65,15 @@ class OrderCancelObserver implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();
+
+        $payment = $order->getPayment();
+        $additionalData = json_decode($payment->getAdditionalData());
+        $trackId = $additionalData->mispay_checkout_track_id;
+
+        if ($trackId) {
+            $this->logger->setTrackId($trackId);
+        }
+
         $this->logger->debug('Cancel flow started for the order with id: ' . $order->getId());
         $this->logger->debug('Additional information for the order\'s payment: ' . print_r(json_encode($order->getPayment()->getAdditionalInformation()), true));
 

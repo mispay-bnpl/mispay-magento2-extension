@@ -2,6 +2,16 @@
 
 This PHP module is for extending the payment methods of a Magento application to make it able to receive payment via MIS Pay.
 
+## Requirements
+
+Please consider to apply this matrix to your environment;
+[Adobe System requirements](https://experienceleague.adobe.com/en/docs/commerce-operations/installation-guide/system-requirements)
+
+Plugin has been tested these versions;
+
+- PHP 7.4
+- Magento 2.4.2
+
 ## Installation
 
 ```sh
@@ -32,6 +42,7 @@ After the installation process:
 - **Test Mode**: Indicates whether the integration uses the Sandbox or the Production environment. For testing purposes, the Sandbox environment should be used.
 - **Show MISPay Logo**: The MISPay logo will appear if this option is selected.
 - **New Order Status**: The status of the new orders.
+- **Widget Access Code**: Access code for the widget render. If you leave it empty no widget will be rendered.
 
 That's it! now the customers can use the MISPay option during the checkout process.
 

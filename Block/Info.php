@@ -5,7 +5,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace MISPay\MISPayMethod\Block;
+namespace MISPay\MISPayMethodDynamicCallback\Block;
 
 use Magento\Framework\Phrase;
 use Magento\Payment\Block\ConfigurableInfo;

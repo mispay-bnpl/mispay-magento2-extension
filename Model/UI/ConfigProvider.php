@@ -5,7 +5,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace MISPay\MISPayMethod\Model\UI;
+namespace MISPay\MISPayMethodDynamicCallback\Model\UI;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\App\ObjectManager;
@@ -15,7 +15,7 @@ use Magento\Framework\App\ObjectManager;
  */
 final class ConfigProvider implements ConfigProviderInterface
 {
-    const CODE = 'mispaymethod';
+    const CODE = 'mispaymethod_dynamic_callback';
 
     /**
      * Retrieve assoc array of checkout configuration
@@ -26,7 +26,7 @@ final class ConfigProvider implements ConfigProviderInterface
     {
         $objectManager = ObjectManager::getInstance();
         $logo = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')
-            ->getValue('payment/mispaymethod/mispay_logo');
+            ->getValue('payment/mispaymethod_dynamic_callback/mispay_logo');
 
         return [
             'payment' => [

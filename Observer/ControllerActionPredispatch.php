@@ -1,6 +1,6 @@
 <?php
 
-namespace MISPay\MISPayMethod\Observer;
+namespace MISPay\MISPayMethodDynamicCallback\Observer;
 
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\Event\Observer;
@@ -8,17 +8,18 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
 use Magento\Framework\Message\ManagerInterface;
 use Psr\Log\LoggerInterface;
-use MISPay\MISPayMethod\Helper\MISPayHelper;
-use MISPay\MISPayMethod\Helper\MISPayRequestHelper;
+use MISPay\MISPayMethodDynamicCallback\Helper\MISPayHelper;
+use MISPay\MISPayMethodDynamicCallback\Helper\MISPayRequestHelper;
 use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
  * Class ControllerActionPredispatch
  *
- * @package MISPay\MISPayMethod\Observer
+ * @package MISPay\MISPayMethodDynamicCallback\Observer
  */
 class ControllerActionPredispatch implements ObserverInterface
 {
+
     /**
      * @var Http
      */
@@ -108,9 +109,10 @@ class ControllerActionPredispatch implements ObserverInterface
         $this->urlBuilder = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
         $url = $this->urlBuilder->getUrl("checkout/cart");
 
-        $startCheckoutResult = $this->mispayRequestHelper->startCheckoutSession();
+        $startCheckoutResult = $this->mispayRequestHelper->startCheckoutSession(true); // isDynamic=true
 
-        // die(var_dump($startCheckoutResult));
+        // die(print_r($startCheckoutResult));
+
         if (empty($startCheckoutResult) || empty($startCheckoutResult->url)) {
             $err = !empty($startCheckoutResult->code) ? $startCheckoutResult->code . ': ' . $startCheckoutResult->message : '';
             $this->logger->critical($err);
@@ -125,7 +127,7 @@ class ControllerActionPredispatch implements ObserverInterface
                 'mispay_checkout_app_id' => $this->mispayHelper->getMerchantAppId(),
                 'mispay_checkout_url' => $url,
                 'mispay_checkout_track_id' => $startCheckoutResult->trackId,
-                'order_no' => $orderId,
+                'order_id' => $orderId,
                 'order_increment_id' => $incerementOrderId,
             );
             $payment = $order->getPayment();
@@ -135,6 +137,8 @@ class ControllerActionPredispatch implements ObserverInterface
         }
 
         $this->refillCart($order);
+
+
 
         $this->request->setRedirect($url);
     }

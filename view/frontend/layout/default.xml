@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="head.additional">
-            <block class="MISPay\MISPayMethod\Block\HeadJs" name="mispay_widget_headjs" template="MISPay_MISPayMethod::headjs.phtml" />
+            <block class="MISPay\MISPayMethodDynamicCallback\Block\HeadJs" name="mispay_widget_headjs" template="MISPay_MISPayMethodDynamicCallback::headjs.phtml" />
         </referenceBlock>
     </body>
 </page>

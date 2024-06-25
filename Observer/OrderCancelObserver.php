@@ -1,9 +1,9 @@
 <?php
 
-namespace MISPay\MISPayMethod\Observer;
+namespace MISPay\MISPayMethodDynamicCallback\Observer;
 
-use MISPay\MISPayMethod\Helper\MISPayHelper;
-use MISPay\MISPayMethod\Helper\MISPayLogger;
+use MISPay\MISPayMethodDynamicCallback\Helper\MISPayHelper;
+use MISPay\MISPayMethodDynamicCallback\Helper\MISPayLogger;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Event\ObserverInterface;
@@ -17,7 +17,7 @@ class OrderCancelObserver implements ObserverInterface
      * @var MISPayLogger
      */
     protected $logger;
-    
+
     /**
      * @var MISPayHelper
      */
@@ -43,7 +43,6 @@ class OrderCancelObserver implements ObserverInterface
      */
     protected $filterBuilder;
 
-
     public function __construct(
         LoggerInterface          $logger,
         MISPayHelper             $mispayHelper,
@@ -52,8 +51,7 @@ class OrderCancelObserver implements ObserverInterface
         TransactionRepository    $transactionRepository,
         FilterBuilder            $filterBuilder
 
-    )
-    {
+    ) {
         $this->logger = new MISPayLogger($logger);
         $this->mispayHelper = $mispayHelper;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -68,10 +66,9 @@ class OrderCancelObserver implements ObserverInterface
 
         $payment = $order->getPayment();
         $additionalData = json_decode($payment->getAdditionalData());
-        $trackId = $additionalData->mispay_checkout_track_id;
 
-        if ($trackId) {
-            $this->logger->setTrackId($trackId);
+        if (!empty($additionalData) && !empty($additionalData->mispay_checkout_track_id)) {
+            $this->logger->setTrackId($additionalData->mispay_checkout_track_id);
         }
 
         $this->logger->debug('Cancel flow started for the order with id: ' . $order->getId());
@@ -82,15 +79,14 @@ class OrderCancelObserver implements ObserverInterface
             ->create();
         $searchCriteria = $this->searchCriteriaBuilder->addFilters($searchFilter)->create();
         $transactionsRelatedToOrder = $this->transactionRepository->getList($searchCriteria);
-        $this->logger->debug('Transaction count for the order: ' . count($transactionsRelatedToOrder));
+        $this->logger->debug('Transaction count for the order: ' . count($transactionsRelatedToOrder->getItems()));
 
         // If there's some transactions for this order and the order is a Mispay order, then should refund it
-        if ($this->mispayHelper->isMispayOrder($order) and count($transactionsRelatedToOrder) > 0) {
+        if ($this->mispayHelper->isMispayOrder($order) and count($transactionsRelatedToOrder->getItems()) > 0) {
             // TODO Add refund logic here
             $this->logger->debug('The order has to be refunded');
         } else {
             $this->logger->debug('Order does not have any transaction bound to it, so no refund is required');
-
         }
         $this->logger->debug('Cancel flow ended for the order' . $order->getId());
 

@@ -6,7 +6,7 @@
 		</group>
 	</groups>
 	<methods>
-		<method name="mispaymethod">
+		<method name="mispaymethod_dynamic_callback">
 			<allow_multiple_address>1</allow_multiple_address>
 		</method>
 	</methods>

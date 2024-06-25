@@ -1,13 +1,13 @@
 <?php
 
-namespace MISPay\MISPayMethod\Block\Adminhtml\Order\View;
+namespace MISPay\MISPayMethodDynamicCallback\Block\Adminhtml\Order\View;
 
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Framework\App\RequestInterface;
 
 class AdditionalPaymentData extends \Magento\Backend\Block\Template
 {
-    protected $_template = 'MISPay_MISPayMethod::order/view/additional_payment_data.phtml';
+    protected $_template = 'MISPay_MISPayMethodDynamicCallback::order/view/additional_payment_data.phtml';
     protected $orderRepository;
     protected $request;
 

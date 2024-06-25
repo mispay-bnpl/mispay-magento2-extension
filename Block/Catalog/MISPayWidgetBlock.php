@@ -1,15 +1,15 @@
 <?php
 
-namespace MISPay\MISPayMethod\Block\Catalog;
+namespace MISPay\MISPayMethodDynamicCallback\Block\Catalog;
 
 use Magento\Backend\Model\Auth\Session;
-use MISPay\MISPayMethod\Helper\MISPayHelper;
+use MISPay\MISPayMethodDynamicCallback\Helper\MISPayHelper;
 use Magento\Framework\View\Element\Template;
 
 /**
  * Class Payment
  *
- * @package MISPay\MISPayMethod\Block\Catalog\MISPayWidgetBlock
+ * @package MISPay\MISPayMethodDynamicCallback\Block\Catalog\MISPayWidgetBlock
  */
 // class MISPayWidgetBlock extends \Magento\Backend\Block\Template
 class MISPayWidgetBlock extends Template

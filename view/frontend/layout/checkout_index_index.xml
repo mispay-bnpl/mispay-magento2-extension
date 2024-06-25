@@ -15,10 +15,10 @@
 													<item name="children" xsi:type="array">
 														<item name="renders" xsi:type="array">
 															<item name="children" xsi:type="array">
-																<item name="mispaymethod" xsi:type="array">
-																	<item name="component" xsi:type="string">MISPay_MISPayMethod/js/view/payment/mispaymethod</item>
+																<item name="mispaymethod_dynamic_callback" xsi:type="array">
+																	<item name="component" xsi:type="string">MISPay_MISPayMethodDynamicCallback/js/view/payment/mispaymethod_dynamic_callback</item>
 																	<item name="methods" xsi:type="array">
-																		<item name="mispaymethod" xsi:type="array">
+																		<item name="mispaymethod_dynamic_callback" xsi:type="array">
 																			<item name="isBillingAddressRequired" xsi:type="boolean">true</item>
 																		</item>
 																	</item>

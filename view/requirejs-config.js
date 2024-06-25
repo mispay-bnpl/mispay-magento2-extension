@@ -1,7 +1,7 @@
 let config = {
   map: {
     "*": {
-      iframeResizer: "MISPay_MISPayMethod/js/iframeResizer.min",
+      iframeResizer: "MISPay_MISPayMethodDynamicCallback/js/iframeResizer.min",
     },
   },
 };

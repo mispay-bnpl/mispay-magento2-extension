@@ -2,15 +2,16 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
-            <mispaymethod>
+            <mispaymethod_dynamic_callback>
                 <active>1</active>
-                <model>MISPayMethodFacade</model>
+                <model>MISPayMethodDynamicCallbackFacade</model>
                 <title>Credit Card</title>
                 <order_status>processing</order_status>
                 <merchant_app_id></merchant_app_id>
                 <merchant_app_secret></merchant_app_secret>
                 <is_widget_enabled></is_widget_enabled>
                 <widget_access_key></widget_access_key>
+                <callback_url_template>/mispay/callback</callback_url_template>
                 <debug_on>1</debug_on>
                 <test_mode>1</test_mode>
                 <mispay_logo>1</mispay_logo>
@@ -19,7 +20,7 @@
                 <can_use_checkout>1</can_use_checkout>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_refund>1</can_refund>
-            </mispaymethod>
+            </mispaymethod_dynamic_callback>
         </payment>
     </default>
 </config>

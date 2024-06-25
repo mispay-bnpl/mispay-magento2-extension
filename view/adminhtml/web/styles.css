@@ -1,7 +1,7 @@
-.mispay-section .heading {
+.mispay-dynamic-callback-section .heading {
     background: url(https://cdn.mispay.co/assets/logo/applogo.svg) no-repeat 0% 50% / 14rem auto;
     padding-left: 20rem;
 }
-.mispay-section .button-container {float: right;}
-.mispay-section .link-more {margin-left: 5px;}
+.mispay-dynamic-callback-section .button-container {float: right;}
+.mispay-dynamic-callback-section .link-more {margin-left: 5px;}
 #payment_other_mispay_iframe .value{ width: 100%!important; }

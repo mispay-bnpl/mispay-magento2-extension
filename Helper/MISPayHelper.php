@@ -1,6 +1,6 @@
 <?php
 
-namespace MISPay\MISPayMethod\Helper;
+namespace MISPay\MISPayMethodDynamicCallback\Helper;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ObjectManager;
@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Class MISPayHelper
  *
- * @package MISPay\MISPayMethod\Helper
+ * @package MISPay\MISPayMethodDynamicCallback\Helper
  */
 class MISPayHelper
 {
@@ -46,11 +46,11 @@ class MISPayHelper
     private $logger;
 
     public function __construct(
-        Context               $context,
-        Session               $checkoutSession,
-        OrderFactory          $orderFactory,
+        Context $context,
+        Session $checkoutSession,
+        OrderFactory $orderFactory,
         StoreManagerInterface $storeManager,
-        LoggerInterface       $logger
+        LoggerInterface $logger
     ) {
         $this->config = $context->getScopeConfig();
         $this->checkoutSession = $checkoutSession;
@@ -117,7 +117,9 @@ class MISPayHelper
     public function getBaseUrl()
     {
         if ($this->getTestMode() == 1) {
+            // return "https://mispay-merchant-app-dev.finbyte.cloud/api";
             return "https://api.mispay.co/sandbox/v1/api";
+            // return "https://mispay-merchant-app-test.finbyte.cloud/api";
         }
         return "https://api.mispay.co/v1/api";
     }
@@ -148,7 +150,7 @@ class MISPayHelper
      */
     public function getMerchantAppId()
     {
-        return $this->config->getValue('payment/mispaymethod/merchant_app_id', $this->getScopeInterface());
+        return $this->config->getValue('payment/mispaymethod_dynamic_callback/merchant_app_id', $this->getScopeInterface());
     }
 
     /**
@@ -156,7 +158,7 @@ class MISPayHelper
      */
     public function isWidgetEnabled()
     {
-        return $this->config->getValue('payment/mispaymethod/is_widget_enabled', $this->getScopeInterface());
+        return $this->config->getValue('payment/mispaymethod_dynamic_callback/is_widget_enabled', $this->getScopeInterface());
     }
 
     /**
@@ -164,7 +166,7 @@ class MISPayHelper
      */
     public function getWidgetAccessKey()
     {
-        return $this->config->getValue('payment/mispaymethod/widget_access_key', $this->getScopeInterface());
+        return $this->config->getValue('payment/mispaymethod_dynamic_callback/widget_access_key', $this->getScopeInterface());
     }
 
     /**
@@ -172,12 +174,12 @@ class MISPayHelper
      */
     public function getTimeoutLimit()
     {
-        return $this->config->getValue('payment/mispaymethod/timeout_limit', $this->getScopeInterface());
+        return $this->config->getValue('payment/mispaymethod_dynamic_callback/timeout_limit', $this->getScopeInterface());
     }
 
     public function getOrderStatus()
     {
-        return $this->config->getValue('payment/mispaymethod/order_status', $this->getScopeInterface());
+        return $this->config->getValue('payment/mispaymethod_dynamic_callback/order_status', $this->getScopeInterface());
     }
 
     /**
@@ -185,7 +187,7 @@ class MISPayHelper
      */
     public function getMerchantSecret()
     {
-        return $this->config->getValue('payment/mispaymethod/merchant_app_secret', $this->getScopeInterface()) ?? 'NnYLzPw6CTtoNk5K';
+        return $this->config->getValue('payment/mispaymethod_dynamic_callback/merchant_app_secret', $this->getScopeInterface()) ?? 'NnYLzPw6CTtoNk5K';
     }
 
     /**
@@ -193,7 +195,7 @@ class MISPayHelper
      */
     public function getDebugOn()
     {
-        return $this->config->getValue('payment/mispaymethod/debug_on', $this->getScopeInterface());
+        return $this->config->getValue('payment/mispaymethod_dynamic_callback/debug_on', $this->getScopeInterface());
     }
 
     /**
@@ -201,7 +203,15 @@ class MISPayHelper
      */
     public function getTestMode()
     {
-        return $this->config->getValue('payment/mispaymethod/test_mode', $this->getScopeInterface()) ?? 1;
+        return $this->config->getValue('payment/mispaymethod_dynamic_callback/test_mode', $this->getScopeInterface()) ?? 1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCallbackUrlTemplate()
+    {
+        return $this->config->getValue('payment/mispaymethod_dynamic_callback/callback_url_template', $this->getScopeInterface()) ?? '/mispay-dynamic/callback';
     }
 
     /**
@@ -213,11 +223,39 @@ class MISPayHelper
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getIncerementOrderId()
     {
         return $this->checkoutSession->getLastRealOrder()->getIncrementId();
+    }
+
+    private function template_substitution($template, $data)
+    {
+        $placeholders = array_map(function ($placeholder) {
+            return strtoupper("{{$placeholder}}");
+        }, array_keys($data));
+
+        return strtr($template, array_combine($placeholders, $data));
+    }
+
+    /**
+     * @return string
+     */
+    public function getCallbackUri()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+        $baseUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+        $callbackUrlTemplate = $this->getCallbackUrlTemplate();
+        $finalCallbackUrl = strtr($callbackUrlTemplate, [
+            '{LANG}' => $this->getLang(),
+            '{LOCALE}' => $this->getLocale()
+        ]);
+        if (strpos($finalCallbackUrl, '/') === 0) {
+            $finalCallbackUrl = substr($finalCallbackUrl, 1);
+        }
+        return $baseUrl . $finalCallbackUrl;
     }
 
     /**
@@ -258,7 +296,6 @@ class MISPayHelper
         }
         return base64_encode(json_encode($user_basket));
     }
-
 
     /**
      * @return OrderAddressInterface|null
@@ -345,12 +382,22 @@ class MISPayHelper
     }
 
     /**
+     * @return mixed|string
+     */
+    public function getLocale()
+    {
+        $objectManager = ObjectManager::getInstance()->get('Magento\Framework\Locale\Resolver')->getLocale();
+        return explode('_', $objectManager)[1] ?? 'sa';
+    }
+
+    /**
      * @return bool
      */
     public function isMispayOrder(\Magento\Sales\Model\Order $order)
     {
         return $order->getPayment()->getMethod() == "mispay" ||
-            $order->getPayment()->getMethod() == "mispaymethod";
+            $order->getPayment()->getMethod() == "mispaymethod" ||
+            $order->getPayment()->getMethod() == "mispaymethod_dynamic_callback";
     }
 
     /**

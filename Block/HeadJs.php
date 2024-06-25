@@ -1,9 +1,9 @@
 <?php
 
-namespace MISPay\MISPayMethod\Block;
+namespace MISPay\MISPayMethodDynamicCallback\Block;
 
 use \Magento\Framework\View\Element\Template;
-use MISPay\MISPayMethod\Helper\MISPayHelper;
+use MISPay\MISPayMethodDynamicCallback\Helper\MISPayHelper;
 
 class HeadJs extends Template
 {

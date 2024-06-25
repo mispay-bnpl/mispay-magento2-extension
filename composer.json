@@ -1,8 +1,8 @@
 {
-    "name": "mispay/mispay-magento2-payment-method",
-    "description": "MIS Pay Magento2 Payment Module",
+    "name": "mispay/mispay-magento2-payment-method-dynamic-callback",
+    "description": "MIS Pay Magento2 Payment Module with dynamic callback feature",
     "type": "magento2-module",
-    "version": "1.1.2",
+    "version": "1.1.0",
     "license": "MIT",
     "authors": [
         {
@@ -16,11 +16,11 @@
             "registration.php"
         ],
         "psr-4": {
-            "MISPay\\MISPayMethod\\": ""
+            "MISPay\\MISPayMethodDynamicCallback\\": ""
         }
     },
     "require": {
-        "php": "^7.4|^8.0"
+        "php": "^7.4"
     },
     "keywords": [
         "mispay",

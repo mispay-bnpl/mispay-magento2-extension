@@ -1,6 +1,6 @@
 <?php
 
-namespace MISPay\MISPayMethod\Helper;
+namespace MISPay\MISPayMethodDynamicCallback\Helper;
 
 use Psr\Log\LoggerInterface;
 
@@ -14,7 +14,7 @@ class MISPayLogger
     /**
      * @var string
      */
-    protected $trackId;
+    protected string $trackId;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -47,4 +47,3 @@ class MISPayLogger
         $this->logger->error($this->getPrefix() . $message);
     }
 }
-

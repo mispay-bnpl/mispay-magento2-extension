@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MISPay\MISPayMethod\Model\Payment;
+namespace MISPay\MISPayMethodDynamicCallback\Model\Payment;
 
 use Magento\Payment\Model\Method\AbstractMethod;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace MISPay\MISPayMethod\Block\Adminhtml\System\Config\Fieldset;
+namespace MISPay\MISPayMethodDynamicCallback\Block\Adminhtml\System\Config\Fieldset;
 
 use Magento\Backend\Block\Context;
 use Magento\Backend\Model\Auth\Session;
@@ -12,9 +12,10 @@ use Magento\Framework\View\Helper\Js;
 /**
  * Class Payment
  *
- * @package MISPay\MISPayMethod\Block\Adminhtml\System\Config\Fieldset
+ * @package MISPay\MISPayMethodDynamicCallback\Block\Adminhtml\System\Config\Fieldset
  */
-class Payment extends Fieldset {
+class Payment extends Fieldset
+{
 
     protected $_backendConfig;
 
@@ -42,23 +43,25 @@ class Payment extends Fieldset {
      * @param  AbstractElement $element
      * @return string
      */
-    protected function _getFrontendClass($element) {
+    protected function _getFrontendClass($element)
+    {
         $enabledString = $this->_isPaymentEnabled($element) ? ' enabled' : 'enabled';
-        return parent::_getFrontendClass($element).' with-button'.$enabledString;
+        return parent::_getFrontendClass($element) . ' with-button' . $enabledString;
     }
 
     /**
      * @param  $element
      * @return bool
      */
-    protected function _isPaymentEnabled($element) {
+    protected function _isPaymentEnabled($element)
+    {
         $groupConfig = $element->getGroup();
         $activityPaths = isset($groupConfig['activity_path']) ? $groupConfig['activity_path'] : [];
-        if(!is_array($activityPaths)) {
+        if (!is_array($activityPaths)) {
             $activityPaths = [$activityPaths];
         }
         $isPaymentEnabled = true;
-        foreach($activityPaths as $activityPath) {
+        foreach ($activityPaths as $activityPath) {
             $isPaymentEnabled = $isPaymentEnabled || (bool)(string)$this->_backendConfig
                 ->getConfigDataValue($activityPath);
         }
@@ -69,35 +72,36 @@ class Payment extends Fieldset {
      * @param  AbstractElement $element
      * @return string
      */
-    protected function _getHeaderTitleHtml($element) {
+    protected function _getHeaderTitleHtml($element)
+    {
         $html = '<div class="config-heading" >';
         $groupConfig = $element->getGroup();
         $disabledAttributeString = $this->_isPaymentEnabled($element) ? '' : ' disabled="disabled"';
         $disabledClassString = $this->_isPaymentEnabled($element) ? '' : ' disabled';
         $htmlId = $element->getHtmlId();
-        $html .= '<div class="button-container"><button type="button"'.
-            $disabledAttributeString.
-            ' class="button action-configure'.
-            (empty($groupConfig['mispay_ec_separate']) ? '' : ' mispay-ec-separate').
-            $disabledClassString.
-            '" id="'.
-            $htmlId.
-            '-head" onclick="mispayToggleSolution.call(this, \''.
-            $htmlId.
-            "', '".
+        $html .= '<div class="button-container"><button type="button"' .
+            $disabledAttributeString .
+            ' class="button action-configure' .
+            (empty($groupConfig['mispay_ec_separate']) ? '' : ' mispay-ec-separate') .
+            $disabledClassString .
+            '" id="' .
+            $htmlId .
+            '-head" onclick="mispayToggleSolution.call(this, \'' .
+            $htmlId .
+            "', '" .
             $this->getUrl(
                 'adminhtml/*/state'
-            ).'\'); return false;"><span class="state-closed">'.__(
+            ) . '\'); return false;"><span class="state-closed">' . __(
                 'Settings'
-            ).'</span><span class="state-opened">'.__(
+            ) . '</span><span class="state-opened">' . __(
                 'Close'
-            ).'</span></button>';
+            ) . '</span></button>';
 
         $html .= '</div>';
-        $html .= '<div class="heading"><strong>'.$element->getLegend().'</strong>';
+        $html .= '<div class="heading"><strong>' . $element->getLegend() . '</strong>';
 
-        if($element->getComment()) {
-            $html .= '<span class="heading-intro">'.$element->getComment().'</span>';
+        if ($element->getComment()) {
+            $html .= '<span class="heading-intro">' . $element->getComment() . '</span>';
         }
         $html .= '<div class="config-alt"></div>';
         $html .= '</div></div>';
@@ -109,7 +113,8 @@ class Payment extends Fieldset {
      * @param  AbstractElement $element
      * @return string
      */
-    protected function _getHeaderCommentHtml($element) {
+    protected function _getHeaderCommentHtml($element)
+    {
         return '';
     }
 
@@ -117,7 +122,8 @@ class Payment extends Fieldset {
      * @param  AbstractElement $element
      * @return false
      */
-    protected function _isCollapseState($element) {
+    protected function _isCollapseState($element)
+    {
         return false;
     }
 
@@ -125,7 +131,8 @@ class Payment extends Fieldset {
      * @param  AbstractElement $element
      * @return string
      */
-    protected function _getExtraJs($element) {
+    protected function _getExtraJs($element)
+    {
         $script = "require(['jquery', 'prototype'], function(jQuery){
             window.mispayToggleSolution = function (id, url) {
                 var doScroll = false;

@@ -1,6 +1,6 @@
 <?php
 
-namespace MISPay\MISPayMethod\Helper;
+namespace MISPay\MISPayMethodDynamicCallback\Helper;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Class MISPayRequestHelper
  *
- * @package MISPay\MISPayMethod\Helper
+ * @package MISPay\MISPayMethodDynamicCallback\Helper
  */
 class MISPayRequestHelper
 {
@@ -134,11 +134,12 @@ class MISPayRequestHelper
     /**
      * @return mixed
      */
-    public function startCheckoutSession()
+    public function startCheckoutSession($isDynamic = false)
     {
         $accessToken = $this->getAccessToken();
         $url = $this->mispayHelper->getBaseUrl() . $this->mispayHelper->getEndpoints()['startCheckoutSession'];
         $lang = $this->mispayHelper->getLang() == 'en' ? 'en' : 'ar';
+        $callbackUri = $this->mispayHelper->getCallbackUri();
 
         $options = array(
             CURLOPT_URL => $url,
@@ -152,6 +153,7 @@ class MISPayRequestHelper
                 "version": "v1.1",
                 "orderId": "' . $this->mispayHelper->getIncerementOrderId() . '",
                 "purchaseAmount": ' . $this->mispayHelper->getPaymentAmount() . ',
+                ' . ($isDynamic ? '"callbackUri": "' . $callbackUri . '",' : '') . '
                 "purchaseCurrency": "SAR",
                 "lang": "' . $lang . '"
             }',
@@ -163,6 +165,8 @@ class MISPayRequestHelper
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
         );
+
+        // die(json_encode($options, JSON_PRETTY_PRINT));
 
         $curl = curl_init();
         curl_setopt_array($curl, $options);

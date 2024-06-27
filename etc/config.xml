@@ -5,7 +5,8 @@
             <mispaymethod>
                 <active>1</active>
                 <model>MISPayMethodFacade</model>
-                <title>Credit Card</title>
+                <title>Buy now then pay it later with MISpay</title>
+                <description>Split your purchase into 3 interest-free payments, No late fees. sharia-compliant</description>
                 <order_status>processing</order_status>
                 <merchant_app_id></merchant_app_id>
                 <merchant_app_secret></merchant_app_secret>
@@ -13,6 +14,10 @@
                 <widget_access_key></widget_access_key>
                 <debug_on>1</debug_on>
                 <test_mode>1</test_mode>
+
+                <min_order_total>200</min_order_total>
+                <max_order_total>3000</max_order_total>
+
                 <mispay_logo>1</mispay_logo>
                 <is_offline>0</is_offline>
                 <is_gateway>0</is_gateway>

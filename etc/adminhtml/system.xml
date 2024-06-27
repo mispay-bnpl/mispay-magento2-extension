@@ -14,7 +14,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Payment Area Title</label>
+                    <label>Payment Option Title</label>
+                    <frontend_class>required-entry</frontend_class>
+                </field>
+                <field id="description" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment Option Description</label>
                     <frontend_class>required-entry</frontend_class>
                 </field>
                 <field id="merchant_app_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -30,6 +34,14 @@
                 <field id="mispay_logo" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show MIS Pay Logo?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="min_order_total" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Minimum Order Total</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="max_order_total" translate="label" type="text" sortOrder="131" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Maximum Order Total</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
                 </field>
                 <field id="order_status" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>New Order Status</label>

@@ -160,6 +160,22 @@ class MISPayHelper
     }
 
     /**
+     * @return mixed|int
+     */
+    public function getMinOrderTotal()
+    {
+        return $this->config->getValue('payment/mispaymethod/min_order_total', $this->getScopeInterface());
+    }
+
+    /**
+     * @return mixed|int
+     */
+    public function getMaxOrderTotal()
+    {
+        return $this->config->getValue('payment/mispaymethod/max_order_total', $this->getScopeInterface());
+    }
+
+    /**
      * @return mixed
      */
     public function getWidgetAccessKey()

@@ -7,7 +7,7 @@
                 <model>MISPayMethodFacade</model>
                 <title>Buy now then pay it later with MISpay</title>
                 <description>Split your purchase into 3 interest-free payments, No late fees. sharia-compliant</description>
-                <order_status>processing</order_status>
+                <order_status>pending</order_status>
                 <merchant_app_id></merchant_app_id>
                 <merchant_app_secret></merchant_app_secret>
                 <is_widget_enabled></is_widget_enabled>

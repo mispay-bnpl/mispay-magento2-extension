@@ -6,7 +6,7 @@
                 <active>1</active>
                 <model>MISPayMethodFacade</model>
                 <title>Credit Card</title>
-                <order_status>processing</order_status>
+                <order_status>pending</order_status>
                 <merchant_app_id></merchant_app_id>
                 <merchant_app_secret></merchant_app_secret>
                 <is_widget_enabled></is_widget_enabled>

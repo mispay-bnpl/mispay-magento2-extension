@@ -131,6 +131,9 @@ class ControllerActionPredispatch implements ObserverInterface
             $payment = $order->getPayment();
             $payment->setAdditionalData(json_encode($details));
 
+            $newOrderStatus = $this->mispayHelper->getOrderStatus();
+            $order->setState($newOrderStatus)->setStatus($newOrderStatus);
+
             $this->orderRepository->save($order);
         }
 

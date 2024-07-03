@@ -175,6 +175,9 @@ class MISPayHelper
         return $this->config->getValue('payment/mispaymethod/timeout_limit', $this->getScopeInterface());
     }
 
+    /**
+     * @return \Magento\Sales\Model\Config\Source\Order\Status
+     */
     public function getOrderStatus()
     {
         return $this->config->getValue('payment/mispaymethod/order_status', $this->getScopeInterface());

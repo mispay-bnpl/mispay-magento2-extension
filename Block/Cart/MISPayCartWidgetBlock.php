@@ -1,30 +1,36 @@
 <?php
 
-namespace MISPay\MISPayMethod\Block\Catalog;
+namespace MISPay\MISPayMethod\Block\Cart;
 
 use MISPay\MISPayMethod\Helper\MISPayHelper;
 use Magento\Framework\View\Element\Template;
+use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 
 /**
  * Class Payment
  *
- * @package MISPay\MISPayMethod\Block\Catalog\MISPayWidgetBlock
+ * @package MISPay\MISPayMethod\Block\Cart\MISPayCartWidgetBlock
  */
-class MISPayWidgetBlock extends Template
+class MISPayCartWidgetBlock extends Template
 {
     protected $mispayHelper;
 
-    protected $catalogHelper;
+    protected $checkoutSession;
+
+    protected $pricingHelper;
 
     public function __construct(
         Template\Context $context,
-        \Magento\Catalog\Helper\Data $catalogHelper,
         MISPayHelper $mispayHelper,
+        CheckoutSession $checkoutSession,
+        PricingHelper $pricingHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->mispayHelper = $mispayHelper;
-        $this->catalogHelper = $catalogHelper;
+        $this->checkoutSession = $checkoutSession;
+        $this->pricingHelper = $pricingHelper;
     }
 
     protected function _toHtml()
@@ -42,21 +48,16 @@ class MISPayWidgetBlock extends Template
         return $this->mispayHelper->getLang();
     }
 
-    /**
-     * Returns prices
-     *
-     * @return float
-     */
     public function getPrice()
     {
-        $product = $this->catalogHelper->getProduct();
-        return $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+        $quote = $this->checkoutSession->getQuote();
+        return $quote->getGrandTotal();
     }
 
     public function isVisible()
     {
         return $this->mispayHelper->isWidgetEnabled()
-            && $this->getPrice() >= $this->mispayHelper->getMinWidgetAmountLimit()
-            && $this->getPrice() <= $this->mispayHelper->getMaxWidgetAmountLimit();
+            && $this->getPrice() >= $this->mispayHelper->getMinOrderTotal()
+            && $this->getPrice() <= $this->mispayHelper->getMaxOrderTotal();
     }
 }

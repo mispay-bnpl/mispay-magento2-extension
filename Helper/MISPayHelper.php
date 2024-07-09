@@ -156,7 +156,8 @@ class MISPayHelper
      */
     public function isWidgetEnabled()
     {
-        return $this->config->getValue('payment/mispaymethod/is_widget_enabled', $this->getScopeInterface());
+        $value = $this->config->getValue('payment/mispaymethod/is_widget_enabled', $this->getScopeInterface());
+        return boolval($value);
     }
 
     /**
@@ -164,7 +165,8 @@ class MISPayHelper
      */
     public function getMinOrderTotal()
     {
-        return $this->config->getValue('payment/mispaymethod/min_order_total', $this->getScopeInterface());
+        $value = $this->config->getValue('payment/mispaymethod/min_order_total', $this->getScopeInterface());
+        return floatval($value);
     }
 
     /**
@@ -172,7 +174,26 @@ class MISPayHelper
      */
     public function getMaxOrderTotal()
     {
-        return $this->config->getValue('payment/mispaymethod/max_order_total', $this->getScopeInterface());
+        $value = $this->config->getValue('payment/mispaymethod/max_order_total', $this->getScopeInterface());
+        return floatval($value);
+    }
+
+    /**
+     * @return mixed|int
+     */
+    public function getMinWidgetAmountLimit()
+    {
+        $value = $this->config->getValue('payment/mispaymethod/min_widget_limit', $this->getScopeInterface());
+        return floatval($value);
+    }
+
+    /**
+     * @return mixed|int
+     */
+    public function getMaxWidgetAmountLimit()
+    {
+        $value = $this->config->getValue('payment/mispaymethod/max_widget_limit', $this->getScopeInterface());
+        return floatval($value);
     }
 
     /**

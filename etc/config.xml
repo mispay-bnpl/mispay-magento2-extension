@@ -16,7 +16,10 @@
                 <test_mode>1</test_mode>
 
                 <min_order_total>200</min_order_total>
-                <max_order_total>3000</max_order_total>
+                <max_order_total>5000</max_order_total>
+
+                <min_widget_limit>50</min_widget_limit>
+                <max_widget_limit>4000</max_widget_limit>
 
                 <mispay_logo>1</mispay_logo>
                 <is_offline>0</is_offline>

@@ -2,7 +2,7 @@
     "name": "mispay/mispay-magento2-payment-method",
     "description": "MIS Pay Magento2 Payment Module",
     "type": "magento2-module",
-    "version": "1.1.2",
+    "version": "1.1.4",
     "license": "MIT",
     "authors": [
         {

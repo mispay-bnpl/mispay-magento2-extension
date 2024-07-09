@@ -8,7 +8,7 @@
 namespace MISPay\MISPayMethod\Model\UI;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use MISPay\MISPayMethod\Helper\MISPayHelper;
 
 /**
  * Class ConfigProvider
@@ -18,16 +18,14 @@ final class ConfigProvider implements ConfigProviderInterface
     const CODE = 'mispaymethod';
 
     /**
-     * @var ScopeConfigInterface
+     * @var MISPayHelper
      */
-    protected $scopeConfig;
+    protected $mispayHelper;
 
-    /**
-     * @param ScopeConfigInterface      $scopConfigProvider
-     */
-    public function __construct(ScopeConfigInterface $scopConfigProvider)
-    {
-        $this->scopeConfig = $scopConfigProvider;
+    public function __construct(
+        MISPayHelper $mispayHelper,
+    ) {
+        $this->mispayHelper = $mispayHelper;
     }
 
     /**
@@ -37,9 +35,9 @@ final class ConfigProvider implements ConfigProviderInterface
      */
     public function getConfig()
     {
-        $logo = $this->getLogo();
-        $title = $this->getTitle();
-        $description = $this->getDescription();
+        $logo = $this->mispayHelper->getLogo();
+        $title = $this->mispayHelper->getTitle();
+        $description = $this->mispayHelper->getDescription();
 
         return [
             'payment' => [
@@ -48,46 +46,10 @@ final class ConfigProvider implements ConfigProviderInterface
                     'title' =>  $title ? $title : __('Buy now then pay it later with MISpay'),
                     'logo_url' => 'https://cdn.mispay.co/assets/logo/applogo.svg',
                     'logo_visible' => $logo ? 'display: inline-block' : 'display: none',
-                    'min_order_total' => $this->getMinOrderTotal(),
-                    'max_order_total' => $this->getMaxOrderTotal()
+                    'min_order_total' => $this->mispayHelper->getMinOrderTotal(),
+                    'max_order_total' => $this->mispayHelper->getMaxOrderTotal(),
                 ]
             ]
         ];
-    }
-
-    private function parseKeyName($key)
-    {
-        return 'payment/' . self::CODE . '/' . $key;
-    }
-
-    private function getLogo()
-    {
-        return $this->scopeConfig->getValue($this->parseKeyName('mispay_logo'));
-    }
-
-    private function getTitle()
-    {
-        return $this->scopeConfig->getValue($this->parseKeyName('title'));
-    }
-
-    private function getDescription()
-    {
-        return $this->scopeConfig->getValue($this->parseKeyName('description'));
-    }
-
-    /**
-     * @return int
-     */
-    private function getMinOrderTotal()
-    {
-        return (int) $this->scopeConfig->getValue($this->parseKeyName('min_order_total'));
-    }
-
-    /**
-     * @return int
-     */
-    private function getMaxOrderTotal()
-    {
-        return (int) $this->scopeConfig->getValue($this->parseKeyName('max_order_total'));
     }
 }

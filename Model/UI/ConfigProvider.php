@@ -22,9 +22,7 @@ final class ConfigProvider implements ConfigProviderInterface
      */
     protected $mispayHelper;
 
-    public function __construct(
-        MISPayHelper $mispayHelper,
-    ) {
+    public function __construct(MISPayHelper $mispayHelper) {
         $this->mispayHelper = $mispayHelper;
     }
 

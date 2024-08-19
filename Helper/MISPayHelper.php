@@ -197,6 +197,30 @@ class MISPayHelper
     }
 
     /**
+     * @return mixed|string
+     */
+    public function getTitle()
+    {
+        return $this->config->getValue('payment/mispaymethod/title', $this->getScopeInterface());
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getDescription()
+    {
+        return $this->config->getValue('payment/mispaymethod/description', $this->getScopeInterface());
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getLogo()
+    {
+        return $this->config->getValue('payment/mispaymethod/mispay_logo', $this->getScopeInterface());
+    }
+
+    /**
      * @return mixed
      */
     public function getWidgetAccessKey()
@@ -382,6 +406,15 @@ class MISPayHelper
     {
         $objectManager = ObjectManager::getInstance()->get('Magento\Framework\Locale\Resolver')->getLocale();
         return explode('_', $objectManager)[0] ?? 'en';
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getLocale()
+    {
+        $objectManager = ObjectManager::getInstance()->get('Magento\Framework\Locale\Resolver')->getLocale();
+        return explode('_', $objectManager)[1] ?? 'sa';
     }
 
     /**

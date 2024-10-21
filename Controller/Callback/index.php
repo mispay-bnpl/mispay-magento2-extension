@@ -123,7 +123,8 @@ class Index implements \Magento\Framework\App\Action\HttpGetActionInterface
 
         $order = $this->checkoutSession->getLastRealOrder();
         $payment = $order->getPayment();
-        $additionalData = json_decode($payment->getAdditionalData());
+        $additionalData = $payment->getAdditionalData();
+        $additionalData = $additionalData ? json_decode($additionalData) : new \stdClass();
 
         if (!isset($decrypted->checkoutId) || $decrypted->code !== 'MP00') {
             $order->setState(Order::STATE_CANCELED)->setStatus(Order::STATE_CANCELED);

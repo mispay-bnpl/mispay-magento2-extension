@@ -39,6 +39,11 @@ class MISPayRequestHelper
     private $accessToken = null;
 
     /**
+     * @var Zend_Log_Writer_Stream
+     */
+    private $writer;
+
+    /**
      * MISPayRequestHelper constructor.
      *
      * @param MISPayHelper $mispayHelper
@@ -53,10 +58,11 @@ class MISPayRequestHelper
         $this->mispayHelper = $mispayHelper;
         $this->orderRepository = $orderRepository;
 
+        $timestamp = date('YmdHis') . substr(microtime(), 2, 3);
         // Create a separate log file for MISPay cron
-        $writer = new Zend_Log_Writer_Stream(BP . '/var/log/mispay_cron.log');
+        $this->writer = new Zend_Log_Writer_Stream(BP . '/var/log/mispay_request_helper_' . $timestamp . '.log');
         $logger = new Zend_Log();
-        $logger->addWriter($writer);
+        $logger->addWriter($this->writer);
 
         $this->logger = $logger;
     }
@@ -408,5 +414,12 @@ class MISPayRequestHelper
         $response = curl_exec($curl);
         $responseBody = json_decode($response);
         return $responseBody;
+    }
+
+    public function __destruct()
+    {
+        if ($this->writer) {
+            $this->writer->close();
+        }
     }
 }

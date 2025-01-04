@@ -10,6 +10,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\OrderFactory;
 use Zend_Log_Writer_Stream;
 use Zend_Log;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Class MISPayRequestHelper
@@ -44,27 +45,63 @@ class MISPayRequestHelper
     private $writer;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @var bool
+     */
+    private $isDebugEnabled;
+
+    /**
      * MISPayRequestHelper constructor.
      *
      * @param MISPayHelper $mispayHelper
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         MISPayHelper $mispayHelper,
         OrderRepositoryInterface $orderRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->mispayHelper = $mispayHelper;
         $this->orderRepository = $orderRepository;
+        $this->scopeConfig = $scopeConfig;
+        
+        $this->isDebugEnabled = $this->scopeConfig->getValue('payment/mispaymethod/debug');
 
-        $timestamp = date('YmdHis') . substr(microtime(), 2, 3);
-        // Create a separate log file for MISPay cron
-        $this->writer = new Zend_Log_Writer_Stream(BP . '/var/log/mispay_request_helper_' . $timestamp . '.log');
-        $logger = new Zend_Log();
-        $logger->addWriter($this->writer);
+        if ($this->isDebugEnabled) {
+            $timestamp = date('YmdHis') . substr(microtime(), 2, 3);
+            $this->writer = new Zend_Log_Writer_Stream(BP . '/var/log/mispay_request_helper_' . $timestamp . '.log');
+            $logger = new Zend_Log();
+            $logger->addWriter($this->writer);
+            $this->logger = $logger;
+        }
+    }
 
-        $this->logger = $logger;
+    private function log($message, $type = 'info')
+    {
+        if (!$this->isDebugEnabled) {
+            return;
+        }
+
+        switch ($type) {
+            case 'error':
+                $this->logger->error($message);
+                break;
+            case 'debug':
+                $this->logger->debug($message);
+                break;
+            case 'warning':
+                $this->logger->warn($message);
+                break;
+            default:
+                $this->logger->info($message);
+        }
     }
 
     private function setAccessToken($token)
@@ -105,14 +142,14 @@ class MISPayRequestHelper
         curl_setopt_array($curl, $options);
         $response = curl_exec($curl);
         if (curl_errno($curl)) {
-            $this->logger->debug(curl_error($curl));
+            $this->log(curl_error($curl), 'debug');
             return null;
         }
         curl_close($curl);
         $responseBody = json_decode($response);
 
         if ($responseBody->status !== 'success') {
-            $this->logger->debug(json_encode($responseBody));
+            $this->log(json_encode($responseBody), 'debug');
             return null;
         }
 
@@ -120,7 +157,7 @@ class MISPayRequestHelper
         $payload = json_decode(($dec));
 
         if (empty($payload->token)) {
-            $this->logger->debug(json_encode($responseBody));
+            $this->log(json_encode($responseBody), 'debug');
             return null;
         }
 
@@ -130,20 +167,25 @@ class MISPayRequestHelper
 
     public function trackCheckout($trackId)
     {
+        if(empty($trackId)) {
+            $this->log('TrackCheckout - Track ID is empty', 'error');
+            return null;
+        }
+
         try {
-            $this->logger->info('TrackCheckout - Starting for Track ID: ' . $trackId);
+            $this->log('TrackCheckout - Starting for Track ID: ' . $trackId);
             
             // Get Access Token
             $accessToken = $this->getAccessToken();
             if (!$accessToken) {
-                $this->logger->error('TrackCheckout - Failed to get access token');
+                $this->log('TrackCheckout - Failed to get access token', 'error');
                 return null;
             }
 
             // Prepare API URL
             $url = $this->mispayHelper->getBaseUrl() . '/track-checkout/' . $trackId;
             
-            $this->logger->info('TrackCheckout - Calling URL: ' . $url);
+            $this->log('TrackCheckout - Calling URL: ' . $url);
 
             // Set up API request
             $curl = curl_init();
@@ -161,11 +203,11 @@ class MISPayRequestHelper
             $response = curl_exec($curl);
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             
-            $this->logger->info('TrackCheckout - Response Code: ' . $httpCode);
-            $this->logger->info('TrackCheckout - Response: ' . $response);
+            $this->log('TrackCheckout - Response Code: ' . $httpCode);
+            $this->log('TrackCheckout - Response: ' . $response);
 
             if (curl_errno($curl)) {
-                $this->logger->error('TrackCheckout - Curl error: ' . curl_error($curl));
+                $this->log('TrackCheckout - Curl error: ' . curl_error($curl), 'error');
                 curl_close($curl);
                 return null;
             }
@@ -175,7 +217,7 @@ class MISPayRequestHelper
             $responseData = json_decode($response);
             
             if (!$responseData) {
-                $this->logger->error('TrackCheckout - Invalid JSON response');
+                $this->log('TrackCheckout - Invalid JSON response', 'error');
                 return null;
             }
 
@@ -184,19 +226,19 @@ class MISPayRequestHelper
                 $orderId = $responseData->result->orderId;
                 $status = $responseData->result->status;
                 
-                $this->logger->info('TrackCheckout - Processing order ' . $orderId . ' with status: ' . $status);
+                $this->log('TrackCheckout - Processing order ' . $orderId . ' with status: ' . $status);
 
                 try {
                     $order = $this->orderRepository->get($orderId);
 
                     if (!$order->getId()) {
-                        $this->logger->error('TrackCheckout - Order not found: ' . $orderId);
+                        $this->log('TrackCheckout - Order not found: ' . $orderId, 'error');
                         return $responseData;
                     }
                     
                     switch ($status) {
                         case 'success':
-                            $this->logger->info('Updating order ' . $orderId . ' to PROCESSING');
+                            $this->log('Updating order ' . $orderId . ' to PROCESSING');
                             $order->setState(Order::STATE_PROCESSING)
                                   ->setStatus(Order::STATE_PROCESSING);
                             
@@ -207,7 +249,7 @@ class MISPayRequestHelper
 
                         case 'canceled':
                         case 'error':
-                            $this->logger->info('Updating order ' . $orderId . ' to CANCELED');
+                            $this->log('Updating order ' . $orderId . ' to CANCELED');
                             $order->setState(Order::STATE_CANCELED)
                                   ->setStatus(Order::STATE_CANCELED);
                             
@@ -218,14 +260,14 @@ class MISPayRequestHelper
 
                         case 'pending':
                         case 'in-progress':
-                            $this->logger->info('Order ' . $orderId . ' still in progress');
+                            $this->log('Order ' . $orderId . ' still in progress');
                             $order->addStatusHistoryComment(
                                 __('Payment is still in progress through MISPay. Track ID: %1', $trackId)
                             )->setIsCustomerNotified(false);
                             break;
 
                         default:
-                            $this->logger->warning('Unknown status received: ' . $status);
+                            $this->log('Unknown status received: ' . $status, 'warning');
                             break;
                     }
 
@@ -240,17 +282,17 @@ class MISPayRequestHelper
                     // Save order
                     $this->orderRepository->save($order);
                     
-                    $this->logger->info('Order ' . $orderId . ' status updated successfully');
+                    $this->log('Order ' . $orderId . ' status updated successfully');
                 } catch (NoSuchEntityException $e) {
-                    $this->logger->error('Order not found: ' . $e->getMessage());
+                    $this->log('Order not found: ' . $e->getMessage(), 'error');
                 } catch (\Exception $e) {
-                    $this->logger->error('Error saving order: ' . $e->getMessage());
+                    $this->log('Error saving order: ' . $e->getMessage(), 'error');
                 }
             }
 
             return $responseData;
         } catch (\Exception $e) {
-            $this->logger->error('TrackCheckout - Exception: ' . $e->getMessage());
+            $this->log('TrackCheckout - Exception: ' . $e->getMessage(), 'error');
             return null;
         }
     }
@@ -275,7 +317,7 @@ class MISPayRequestHelper
             // Verify the formula: totalPrice + shippingAmount + vat = purchaseAmount
             $calculatedTotal = $totalPrice + $shippingAmount + $vat;
             if (abs($calculatedTotal - $this->mispayHelper->getPaymentAmount()) > 0.01) {
-                $this->logger->error('Purchase amount mismatch: ' . $calculatedTotal . ' != ' . $this->mispayHelper->getPaymentAmount());
+                $this->log('Purchase amount mismatch: ' . $calculatedTotal . ' != ' . $this->mispayHelper->getPaymentAmount(), 'error');
             }
 
             // Prepare order details
@@ -336,7 +378,7 @@ class MISPayRequestHelper
             $response = curl_exec($curl);
             $responseBody = json_decode($response);
 
-            $this->logger->info('StartCheckoutSession Response: ' . json_encode($responseBody));
+            $this->log('StartCheckoutSession Response: ' . json_encode($responseBody));
 
             if ($responseBody->status === 'success' && !empty($responseBody->result->trackId)) {
                 // Save trackId to order
@@ -344,7 +386,7 @@ class MISPayRequestHelper
                 $payment = $order->getPayment();
                 
                 // Debug log current additional data
-                $this->logger->info('Current Additional Data: ' . $payment->getAdditionalData());
+                $this->log('Current Additional Data: ' . $payment->getAdditionalData());
                 
                 // Get existing additional data
                 $additionalData = json_decode($payment->getAdditionalData() ?: '{}', true) ?: [];
@@ -361,34 +403,39 @@ class MISPayRequestHelper
                     $this->orderRepository->save($order);
                     
                     // Verify save
-                    $this->logger->info('Saved Track ID: ' . $responseBody->result->trackId);
-                    $this->logger->info('Updated Additional Data: ' . $payment->getAdditionalData());
+                    $this->log('Saved Track ID: ' . $responseBody->result->trackId);
+                    $this->log('Updated Additional Data: ' . $payment->getAdditionalData());
 
                     // Immediately trigger initial trackCheckout
-                    $this->logger->info('Triggering initial trackCheckout for Track ID: ' . $responseBody->result->trackId);
+                    $this->log('Triggering initial trackCheckout for Track ID: ' . $responseBody->result->trackId);
                     $trackResponse = $this->trackCheckout($responseBody->result->trackId);
                     
                     if ($trackResponse) {
-                        $this->logger->info('Initial trackCheckout response: ' . json_encode($trackResponse));
+                        $this->log('Initial trackCheckout response: ' . json_encode($trackResponse));
                     } else {
-                        $this->logger->error('Initial trackCheckout failed');
+                        $this->log('Initial trackCheckout failed', 'error');
                     }
                 } catch (\Exception $e) {
-                    $this->logger->error('Error saving order or tracking checkout: ' . $e->getMessage());
+                    $this->log('Error saving order or tracking checkout: ' . $e->getMessage(), 'error');
                 }
             } else {
-                $this->logger->error('Invalid response from StartCheckoutSession: ' . json_encode($responseBody));
+                $this->log('Invalid response from StartCheckoutSession: ' . json_encode($responseBody), 'error');
             }
 
             return $responseBody->result;
         } catch (\Exception $e) {
-            $this->logger->error('StartCheckoutSession Error: ' . $e->getMessage());
+            $this->log('StartCheckoutSession Error: ' . $e->getMessage(), 'error');
             throw $e;
         }
     }
 
     public function endCheckoutSession($checkoutId)
     {
+        if(empty($checkoutId)) {
+            $this->log('EndCheckoutSession - Checkout ID is empty', 'error');
+            return null;
+        }
+
         $accessToken = $this->getAccessToken();
         $url = $this->mispayHelper->getBaseUrl() . $this->mispayHelper->getEndpoints()['endCheckoutSession'];
         $url = str_replace(':id', $checkoutId, $url);

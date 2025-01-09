@@ -8,7 +8,7 @@ use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\OrderRepository;
 
-class Actions extends Column
+class CronAction extends Column
 {
     const PAYMENT_METHOD_CODE = 'mispaymethod';
     const STATUS_PENDING = 'pending';
@@ -41,46 +41,25 @@ class Actions extends Column
                         $paymentMethod = $payment ? $payment->getMethod() : '';
                         $orderStatus = $order->getStatus();
 
-                        // Initialize actions array
-                        $actions = [];
-
-                        // Add View action for all orders
-                        $actions['view'] = [
-                            'href' => $this->urlBuilder->getUrl(
-                                'sales/order/view',
-                                ['order_id' => $item['entity_id']]
-                            ),
-                            'label' => __('View'),
-                            'hidden' => false,
-                        ];
-
-                        // Add Run Cron Job action only for pending MISPay orders
                         if ($paymentMethod === self::PAYMENT_METHOD_CODE && 
                             strtolower($orderStatus) === self::STATUS_PENDING) {
-                            $actions['runcron'] = [
-                                'href' => $this->urlBuilder->getUrl(
-                                    'mispay/order/runcron',
-                                    ['id' => $item['entity_id']]
-                                ),
-                                'label' => __('Update Order Status'),
-                                'confirm' => [
-                                    'title' => __('Update Order Status'),
-                                    'message' => __('Are you sure you want to check the order status now?')
+                            $item[$name] = [
+                                'runcron' => [
+                                    'href' => $this->urlBuilder->getUrl(
+                                        'mispay/order/runcron',
+                                        ['id' => $item['entity_id']]
+                                    ),
+                                    'label' => __('Update Order Status'),
+                                    'confirm' => [
+                                        'title' => __('Update Order Status'),
+                                        'message' => __('Are you sure you want to check the order status now?')
+                                    ]
                                 ]
                             ];
                         }
-
-                        $item[$name] = $actions;
                     } catch (\Exception $e) {
-                        // If there's an error, at least show the View action
-                        $item[$name]['view'] = [
-                            'href' => $this->urlBuilder->getUrl(
-                                'sales/order/view',
-                                ['order_id' => $item['entity_id']]
-                            ),
-                            'label' => __('View'),
-                            'hidden' => false,
-                        ];
+                        // Leave empty if there's an error
+                        $item[$name] = [];
                     }
                 }
             }

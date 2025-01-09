@@ -9,6 +9,8 @@ use Magento\Framework\Controller\Result\JsonFactory;
 
 class RunCron extends Action
 {
+    const ADMIN_RESOURCE = 'MISPay_MISPayMethod::runcron';
+
     protected $trackCheckoutStatus;
     protected $resultJsonFactory;
 
@@ -28,7 +30,10 @@ class RunCron extends Action
         try {
             $orderId = $this->getRequest()->getParam('id');
             
-            // Execute the cron job
+            if (!$orderId) {
+                throw new \Exception(__('Order ID is required'));
+            }
+            
             $this->trackCheckoutStatus->executeForOrder($orderId);
             
             return $resultJson->setData([
@@ -41,10 +46,5 @@ class RunCron extends Action
                 'message' => $e->getMessage()
             ]);
         }
-    }
-
-    protected function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('Magento_Sales::sales_order');
     }
 } 

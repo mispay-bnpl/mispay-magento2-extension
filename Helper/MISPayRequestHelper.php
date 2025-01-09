@@ -297,6 +297,15 @@ class MISPayRequestHelper
         }
     }
 
+    private function decodeUnicodeString($string) {
+        // Check if the string contains Unicode escape sequences
+        if (strpos($string, '\u') !== false) {
+            // Decode Unicode escape sequences
+            $string = json_decode('"' . $string . '"');
+        }
+        return $string ?: '';
+    }
+
     /**
      * @return mixed
      * @throws \Exception
@@ -324,19 +333,12 @@ class MISPayRequestHelper
             $orderDetails = [
                 'items' => []
             ];
-
             foreach ($order->getAllItems() as $item) {
                 $itemDetails = [
                     'quantity' => $item->getQtyOrdered(),
-                    'unitPrice' => $item->getPrice()
+                    'unitPrice' => $item->getPrice(),
+                    'nameEnglish' => $this->decodeUnicodeString($item->getName())
                 ];
-
-                // Add nameArabic or nameEnglish conditionally
-                if ($item->getNameArabic()) {
-                    $itemDetails['nameArabic'] = $item->getNameArabic();
-                } else {
-                    $itemDetails['nameEnglish'] = $item->getName();
-                }
 
                 $orderDetails['items'][] = $itemDetails;
             }

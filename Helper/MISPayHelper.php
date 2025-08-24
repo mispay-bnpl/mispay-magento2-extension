@@ -117,7 +117,7 @@ class MISPayHelper
     public function getBaseUrl()
     {
         if ($this->getTestMode() == 1) {
-            return "https://api.mispay.co/sandbox/v1/api/";
+            return "https://api-sandbox.mispay.dev/v1/api";
         }
         return "https://api.mispay.co/v1/api";
     }
